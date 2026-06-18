@@ -94,6 +94,7 @@
         "many-level": "catalog:",
         "memory-level": "catalog:",
         "minimatch": "catalog:",
+        "multer": "catalog:",
         "normalize-path": "catalog:",
         "posthog-node": "^5.17.2",
         "prettier": "catalog:",

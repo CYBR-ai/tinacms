@@ -168,8 +168,3 @@ Windows requires [Developer Mode](https://learn.microsoft.com/en-us/windows/apps
 
 Scripts that set environment variables use `cross-env` for Windows compatibility. Windows `cmd` does not support the Unix `VAR=value command` syntax, so `cross-env` ensures environment variables are set correctly across all platforms.
 
-## E2E tests
-
-In order to run the Playwright E2E tests locally:
-
-Please refer to the readme file in playwright/tina-playwright

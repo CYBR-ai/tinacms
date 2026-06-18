@@ -23,13 +23,6 @@ When writing regression tests that guard against a quietly-reported finding, mar
 ```
 packages/              # Core packages (tinacms, tinacms-authjs, create-tina-app, etc.)
 packages/@tinacms/     # Scoped packages (cli, app, datalayer, graphql, mdx, scripts, etc.)
-examples/              # Framework example apps
-  next/kitchen-sink/   # Next.js 15 — the reference kitchen-sink implementation
-  next/tina-self-hosted-demo/ # Self-hosted with auth
-  astro/kitchen-sink/  # Astro 6 — mirrors Next.js kitchen-sink
-  hugo/kitchen-sink/   # Hugo kitchen-sink
-  react/kitchen-sink/  # React kitchen-sink
-  shared/              # Shared content and public assets across kitchen-sink examples
 playwright/            # Playwright test infrastructure
 scripts/               # Repo maintenance scripts
 tests/                 # Build verification tests
@@ -55,41 +48,6 @@ tests/                 # Build verification tests
 - **TypeScript:** Base config at `base.tsconfig.json`. Examples extend it. Strict mode enabled.
 - **Package manager:** pnpm only. Never use npm or yarn.
 - **`CLAUDE.md` files** are git symlinks to the sibling `AGENTS.md`. On Windows without Developer Mode, if `git status` shows `TT` typechanges on them, run `git config --local core.symlinks false` — git then materialises them as regular pointer files. Linux/macOS clones get real symlinks automatically.
-
-## Kitchen-Sink Examples
-
-All kitchen-sink examples implement the **same content model** to demonstrate identical functionality across frameworks. `examples/next/kitchen-sink/` is the reference implementation.
-
-### Unified Content Schema
-
-| Collection | Format | Content Path | Collection File |
-|------------|--------|-------------|-----------------|
-| Tag | JSON | `content/tags/` | `tina/collections/tag.ts` |
-| Author | MD | `content/authors/` | `tina/collections/author.tsx` |
-| Post | MDX | `content/posts/` | `tina/collections/post.tsx` |
-| Blog | MDX | `content/blogs/` | `tina/collections/blog.tsx` |
-| Page | MDX | `content/pages/` | `tina/collections/page.tsx` |
-| Global | JSON | `content/global/` | `tina/collections/global.ts` |
-
-Note: `.tsx` collection files contain JSX for custom field components (e.g., ColorPickerInput in `global.ts` theme field). `.ts` files are pure schema definitions. This applies across all kitchen-sink examples.
-
-### Shared Patterns Across Kitchen-Sink Apps
-
-- TinaCMS wraps the framework dev server: `tinacms dev -c "<framework dev>"`
-- Build order: `tinacms build && <framework build>`
-- Content lives in `content/` with identical MDX/JSON files across examples
-- Tina config at `tina/config.tsx` with collections in `tina/collections/`
-- Admin UI output to `public/admin/`
-- Media root: `uploads/` within `public/`
-
-### Standardized Stack
-
-| Tool | Choice |
-|------|--------|
-| Package Manager | pnpm (workspace-native) |
-| Linting/Formatting | Biome (extends root config) |
-| Styling | Tailwind CSS 4 (CSS-first config) |
-| TypeScript | 5.7+ strict (extends `base.tsconfig.json`) |
 
 ## Filing Issues
 

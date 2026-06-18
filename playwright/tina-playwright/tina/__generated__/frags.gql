@@ -1,0 +1,20 @@
+fragment PageParts on Page {
+  __typename
+  body
+}
+
+fragment PostParts on Post {
+  __typename
+  title
+  body
+}
+
+fragment AuthorParts on Author {
+  __typename
+  Title
+}
+
+fragment SettingsParts on Settings {
+  __typename
+  label
+}

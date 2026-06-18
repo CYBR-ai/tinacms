@@ -20,8 +20,6 @@
         "lint:packages": "pnpm --filter './packages/**' --no-bail exec pnpm dlx publint --strict",
         "test:packages": "vitest run tests/build-verification.test.ts --reporter=verbose && pnpm run lint:packages",
         "types": "turbo run types --filter=\"./packages/**\"",
-        "test:dev": "cd playwright/tina-playwright && npx playwright test --ui",
-        "test:e2e": "cd playwright/tina-playwright && npx playwright test",
         "version": "pnpm exec changeset version",
         "version:snapshot": "pnpm exec changeset version --snapshot",
         "publish": "pnpm publish -r --no-git-checks --access public && pnpm exec changeset tag",

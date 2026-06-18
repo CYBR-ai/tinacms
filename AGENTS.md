@@ -23,7 +23,6 @@ When writing regression tests that guard against a quietly-reported finding, mar
 ```
 packages/              # Core packages (tinacms, tinacms-authjs, create-tina-app, etc.)
 packages/@tinacms/     # Scoped packages (cli, app, datalayer, graphql, mdx, scripts, etc.)
-playwright/            # Playwright test infrastructure
 scripts/               # Repo maintenance scripts
 tests/                 # Build verification tests
 ```

@@ -580,11 +580,6 @@ catalogs:
       specifier: ^3.24.2
       version: 3.25.76
 
-overrides:
-  '@clerk/clerk-js>react': 19.2.3
-  '@clerk/clerk-js>react-dom': 19.2.3
-  '@clerk/backend>react': 19.2.3
-
 importers:
 
   .:

@@ -1,0 +1,111 @@
+name: Release
+
+# On merge to main:
+#  - If changesets are present, open/update a "Version Packages" PR (Changesets flow).
+#  - When that PR merges (no changesets left), pack the fork's packages into tarballs
+#    and publish a GitHub Release with them attached. No npm registry publish — apps
+#    consume the tarballs via pnpm.overrides (see release-artifacts/INSTALL.md).
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency: release-${{ github.ref }}
+
+permissions:
+  contents: write # create tags + releases
+  pull-requests: write # create/update the Version Packages PR
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so Changesets can build changelogs
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          package_json_file: package.json
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Build Types
+        run: pnpm types
+
+      # Opens/updates the "Version Packages" PR while changesets exist. When none
+      # remain (i.e. that PR was merged), hasChangesets is false and we cut a release.
+      - name: Changesets (version PR)
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm exec changeset version && pnpm install --lockfile-only
+          commit: "chore: version packages"
+          title: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine release tag
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        id: tag
+        run: |
+          VERSION=$(node -p "require('./packages/tinacms/package.json').version")
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pack tarballs
+        if: steps.changesets.outputs.hasChangesets == 'false' && steps.tag.outputs.exists == 'false'
+        run: pnpm run release:pack
+
+      - name: Tag packages
+        if: steps.changesets.outputs.hasChangesets == 'false' && steps.tag.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          pnpm exec changeset tag
+          git tag "${{ steps.tag.outputs.tag }}"
+          git push --tags
+
+      - name: Create GitHub Release
+        if: steps.changesets.outputs.hasChangesets == 'false' && steps.tag.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            release-artifacts/*.tgz \
+            release-artifacts/pnpm-overrides.json \
+            --title "${{ steps.tag.outputs.tag }}" \
+            --notes-file release-artifacts/INSTALL.md

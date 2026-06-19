@@ -68,7 +68,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: pnpm exec changeset version && pnpm install --lockfile-only
+          version: pnpm run version
           commit: "chore: version packages"
           title: "chore: version packages"
         env:

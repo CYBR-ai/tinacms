@@ -11,6 +11,7 @@
 *.swp
 packages/cli/forestry/.env
 *.tgz
+release-artifacts/
 .DS_Store
 **/docs/
 .idea/

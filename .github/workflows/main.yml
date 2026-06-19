@@ -17,9 +17,6 @@ jobs:
           - macOS-latest
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
     steps:
       - name: Check out code
@@ -136,10 +133,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
-
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
     steps:
       - name: Check out code

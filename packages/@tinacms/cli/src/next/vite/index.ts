@@ -200,6 +200,12 @@ export const createConfig = async ({
       // Not 100% sure why this isn't being picked up automatically, this works from within the monorepo
       // but breaks externally
       include: ['react/jsx-runtime', 'react/jsx-dev-runtime'],
+      // The dev server pre-bundles deps with a separate esbuild pass that does
+      // NOT inherit build.target. Without this it falls back to Vite's default
+      // target (which includes safari14), and esbuild >=0.27 then errors trying
+      // to transform destructuring in deps like mermaid / @dnd-kit. The admin
+      // SPA only runs in the developer's modern browser, so esnext is fine.
+      esbuildOptions: { target: 'esnext' },
     },
     server: {
       host: configManager.config?.build?.host ?? false,

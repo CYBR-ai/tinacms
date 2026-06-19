@@ -236,6 +236,12 @@ export const createConfig = async ({
       },
     },
     build: {
+      // The admin SPA is internal editing tooling served to the developer's
+      // own modern browser, so it needs no legacy-browser baseline. Pinning an
+      // explicit target also avoids Vite's default (which includes safari14):
+      // esbuild treats safari14 as needing a destructuring transform, and
+      // esbuild >=0.27 errors on that transform for some deps (e.g. mermaid).
+      target: 'esnext',
       sourcemap: false,
       outDir: configManager.outputFolderPath,
       emptyOutDir: true,

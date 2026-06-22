@@ -43,7 +43,10 @@ const errorHTML = `<style type="text/css">
   .trim()
   .replace(/[\r\n\s]+/g, ' ');
 
-export const devHTML = (port: string) => `<!DOCTYPE html>
+// `base` is the Vite base for the admin SPA (e.g. `/admin/`, with leading and
+// trailing slashes). Vite serves its internal dev endpoints under this base, so
+// the dev shell must reference them with it — otherwise the requests 404.
+export const devHTML = (port: string, base = '/') => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -53,13 +56,13 @@ export const devHTML = (port: string) => `<!DOCTYPE html>
 
   <!-- if development -->
   <script type="module">
-    import RefreshRuntime from 'http://localhost:${port}/@react-refresh'
+    import RefreshRuntime from 'http://localhost:${port}${base}@react-refresh'
     RefreshRuntime.injectIntoGlobalHook(window)
     window.$RefreshReg$ = () => {}
     window.$RefreshSig$ = () => (type) => type
     window.__vite_plugin_react_preamble_installed__ = true
   </script>
-  <script type="module" src="http://localhost:${port}/@vite/client"></script>
+  <script type="module" src="http://localhost:${port}${base}@vite/client"></script>
   <script>
   function handleLoadError() {
     // Assets have failed to load
@@ -68,7 +71,7 @@ export const devHTML = (port: string) => `<!DOCTYPE html>
   </script>
   <script
     type="module"
-    src="http://localhost:${port}/src/main.tsx"
+    src="http://localhost:${port}${base}src/main.tsx"
     onerror="handleLoadError()"
   ></script>
   <body class="tina-tailwind">

@@ -1,6 +1,6 @@
 {
   "name": "@tinacms/bridge",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -51,8 +51,8 @@
     "@types/node": "^22.13.1",
     "happy-dom": "catalog:",
     "typescript": "^5.7.3",
-    "vite": "^5.4.14",
-    "vitest": "^2.1.9"
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

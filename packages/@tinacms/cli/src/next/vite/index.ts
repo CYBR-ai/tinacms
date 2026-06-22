@@ -2,14 +2,9 @@ import path from 'node:path';
 import type { Database } from '@tinacms/graphql';
 import react from '@vitejs/plugin-react';
 import fs from 'fs-extra';
-import normalizePath from 'normalize-path';
-import {
-  type BuildOptions,
-  type InlineConfig,
-  type Plugin,
-  splitVendorChunkPlugin,
-} from 'vite';
+import { type BuildOptions, type InlineConfig, type Plugin } from 'vite';
 import type { ConfigManager } from '../config-manager';
+import { getAdminBasePath } from './base';
 import { buildCorsOriginCheck } from './cors';
 import { filterPublicEnv } from './filterPublicEnv';
 import { tinaTailwind } from './tailwind';
@@ -155,18 +150,11 @@ export const createConfig = async ({
       : configManager.generatedTypesJSFilePath;
   }
 
-  let basePath;
-  if (configManager.config.build.basePath) {
-    basePath = configManager.config.build.basePath;
-  }
-
   const fullVersion = configManager.getTinaGraphQLVersion();
   const version = `${fullVersion.major}.${fullVersion.minor}`;
   const config: InlineConfig = {
     root: configManager.spaRootPath,
-    base: `/${basePath ? `${normalizePath(basePath)}/` : ''}${normalizePath(
-      configManager.config.build.outputFolder
-    )}/`,
+    base: getAdminBasePath(configManager),
     appType: 'spa',
     resolve: {
       alias,
@@ -183,11 +171,13 @@ export const createConfig = async ({
        *  - `process.env.__NEXT_CROSS_ORIGIN`
        *  - `process.env.__NEXT_I18N_SUPPORT`
        *
-       * Also, interestingly some of the advice for handling this doesn't work, references to replacing
-       * `process.env` with `{}` are problematic, because browsers don't understand the `{}.` syntax,
-       * but node does. This was a surprise, but using `new Object()` seems to do the trick.
+       * The replacement must be a plain JS literal: Vite 6's esbuild rejects
+       * non-literal define values (e.g. a `new Object(...)` call). Vite wraps
+       * the object literal in parens at each use site (`({...}).FOO`), so the
+       * statement-context `{}.` ambiguity that previously required a workaround
+       * no longer applies.
        */
-      'process.env': `new Object(${JSON.stringify(publicEnv)})`,
+      'process.env': JSON.stringify(publicEnv),
       // Used by picomatch https://github.com/micromatch/picomatch/blob/master/lib/utils.js#L4
       'process.platform': `"${process.platform}"`,
       __API_URL__: `"${apiURL}"`,
@@ -251,21 +241,31 @@ export const createConfig = async ({
       sourcemap: false,
       outDir: configManager.outputFolderPath,
       emptyOutDir: true,
-      rollupOptions: rollupOptions,
+      rollupOptions: {
+        ...rollupOptions,
+        output: {
+          ...(rollupOptions?.output as Record<string, unknown>),
+          /**
+           * Replaces Vite's removed `splitVendorChunkPlugin`: force every
+           * node_modules dependency into a single `vendor` chunk. `tinacms` is
+           * quite large and Vite's default chunking strategy chokes on memory
+           * issues for smaller machines (ie. on CI).
+           */
+          manualChunks(id: string) {
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+          },
+        },
+      },
     },
     plugins: [
-      /**
-       * `splitVendorChunkPlugin` is needed because `tinacms` is quite large,
-       * Vite's chunking strategy chokes on memory issues for smaller machines (ie. on CI).
-       */
       react({
         babel: {
           // Supresses the warning [NOTE] babel The code generator has deoptimised the styling of
           compact: true,
         },
-        fastRefresh: false,
       }),
-      splitVendorChunkPlugin(),
       tinaTailwind(configManager.spaRootPath, configManager.prebuildFilePath),
       ...plugins,
     ],

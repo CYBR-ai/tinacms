@@ -14,6 +14,7 @@ import { Codegen } from '../../codegen';
 import { ConfigManager } from '../../config-manager';
 import { createAndInitializeDatabase, createDBServer } from '../../database';
 import { BaseCommand } from '../baseCommands';
+import { getAdminBasePath } from '../../vite/base';
 import { devHTML } from './html';
 import { createDevServer } from './server';
 
@@ -179,7 +180,10 @@ export class DevCommand extends BaseCommand {
       firstTime: true,
     });
 
-    await fs.outputFile(configManager.outputHTMLFilePath, devHTML(this.port));
+    await fs.outputFile(
+      configManager.outputHTMLFilePath,
+      devHTML(this.port, getAdminBasePath(configManager))
+    );
     // Add the gitignore so the index.html and assets are committed to git
     await fs.outputFile(
       configManager.outputGitignorePath,

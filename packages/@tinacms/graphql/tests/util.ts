@@ -10,7 +10,10 @@ import {
 import { z } from 'zod';
 
 class OutputBridge extends FilesystemBridge {
+  lastWrite: string | undefined;
+
   async put(_filepath: string, data: string) {
+    this.lastWrite = data;
     await super.put(`out.md`, data);
   }
 }
@@ -93,6 +96,9 @@ export const setup = async (dir: string, config: any) => {
         params: { post: data },
       },
     });
+    // Return the markdown the mutation actually wrote so callers can snapshot
+    // the produced output rather than the original input.
+    return bridge.lastWrite;
   };
   return { get, put };
 };

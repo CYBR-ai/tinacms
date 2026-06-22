@@ -116,8 +116,7 @@ export const stringifyFile = (
         ...matterEngines,
         yaml: {
           parse: (val) => yaml.load(val) as object,
-          stringify: (val) =>
-            yaml.dump(val, { lineWidth: yamlMaxLineWidth }),
+          stringify: (val) => yaml.dump(val, { lineWidth: yamlMaxLineWidth }),
         },
       };
       const ok = matter.stringify(

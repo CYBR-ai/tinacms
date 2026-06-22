@@ -15,7 +15,8 @@
       "ESNext"
     ],
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
   },
   "exclude": [

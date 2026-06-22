@@ -5,6 +5,56 @@ overrides:
     # Force every (incl. transitive) vite onto the catalog v6 line so vitest's
     # embedded dev server can't pull a vulnerable vite 5.x back into the tree.
     vite: "catalog:"
+    # --- Dependabot remediation: pin (incl. transitive) deps to patched versions. ---
+    # Exact pins are used deliberately so an open ">=" can't pull an unrelated
+    # higher major (e.g. protobufjs 8.x-alpha, react-router 7).
+    #
+    # jsdom is only an (unused) optional peer of vitest — tests run on happy-dom —
+    # so modernising it removes the legacy request/uuid@3/tough-cookie@2/form-data@2
+    # subtree entirely (incl. the no-upstream-fix request advisory).
+    jsdom: "^29.1.1"
+    dompurify: "3.4.11"
+    markdown-it: "14.2.0"
+    protobufjs: "7.6.3"
+    "@protobufjs/utf8": "1.1.1"
+    "@opentelemetry/core": "2.8.0"
+    "@babel/core": "7.29.7"
+    react-router: "6.30.4"
+    react-router-dom: "6.30.4"
+    js-cookie: "3.0.7"
+    mermaid: "11.15.0"
+    ip-address: "10.1.1"
+    fast-xml-parser: "5.7.0"
+    handlebars: "4.7.9"
+    underscore: "1.13.8"
+    rollup: "4.59.0"
+    lodash: "4.18.0"
+    lodash-es: "4.18.0"
+    # range-targeted: bump each affected major to its patched release only
+    "postcss@8": "8.5.10"
+    "path-to-regexp@<0.2.0": "0.1.13"
+    "form-data@<3.0.0": "2.5.6"
+    "form-data@>=3.0.0 <3.0.5": "3.0.5"
+    "form-data@>=4.0.0 <4.0.6": "4.0.6"
+    # js-yaml 3.x is intentionally NOT forced to 4.x — gray-matter & friends rely
+    # on the v3 safeLoad API. Only the 4.x line is bumped to its patched release.
+    "js-yaml@>=4.0.0 <4.2.0": "4.2.0"
+    "qs@>=6.0.0 <6.15.2": "6.15.2"
+    "uuid@>=11.0.0 <11.1.1": "11.1.1"
+    "picomatch@<3.0.0": "2.3.2"
+    "picomatch@>=4.0.0 <4.0.4": "4.0.4"
+    "yaml@>=2.0.0 <2.8.3": "2.8.3"
+    "yaml@>=1.0.0 <1.10.3": "1.10.3"
+    "minimatch@<4.0.0": "3.1.4"
+    "minimatch@>=5.0.0 <5.1.8": "5.1.8"
+    "minimatch@>=9.0.0 <9.0.7": "9.0.7"
+    "immutable@<4.0.0": "3.8.3"
+    "immutable@>=5.0.0 <5.1.5": "5.1.5"
+    "diff@<5.0.0": "4.0.4"
+    "diff@>=5.0.0 <5.2.2": "5.2.2"
+    "brace-expansion@<2.0.0": "1.1.13"
+    "brace-expansion@>=2.0.0 <2.0.3": "2.0.3"
+    "tmp@<0.2.6": "0.2.6"
 allowBuilds:
     "@biomejs/biome": true
     "@parcel/watcher": true
@@ -67,7 +117,7 @@ catalog:
     "@types/lru-cache": ^5.1.1
     "@types/mdast": ^3.0.15
     "@types/micromatch": ^4.0.9
-    "@types/multer": ^1.4.12
+    "@types/multer": 2.1.0
     "@types/normalize-path": ^3.0.2
     "@types/picomatch": ^3.0.2
     "@types/prettier": ^2.7.3
@@ -104,7 +154,7 @@ catalog:
     "@udecode/plate-trailing-block": ^48.0.0
     "@vercel/stega": ^0.0.5
     "@vitejs/plugin-react": ^4.3.4
-    "@vitest/coverage-v8": ^3.2.6
+    "@vitest/coverage-v8": 4.1.9
     abstract-level: ^1.0.4
     acorn: 8.8.2
     altair-express-middleware: ^7.3.6
@@ -136,7 +186,7 @@ catalog:
     graphiql: 3.0.0-alpha.1
     graphql-tag: ^2.12.6
     gray-matter: ^4.0.3
-    happy-dom: 15.10.2
+    happy-dom: 20.8.9
     highlight.js: ^11.11.1
     identity-obj-proxy: ^3.0.0
     is-hotkey: ^0.2.0
@@ -164,14 +214,14 @@ catalog:
     micromark-util-symbol: 1.0.1
     micromark-util-types: 1.1.0
     micromatch: 4.0.8
-    minimatch: ^5.1.6
+    minimatch: ^5.1.8
     moment: 2.29.4
     monaco-editor: 0.31.0
     mongodb-level: ^0.0.4
-    multer: 1.4.5-lts.1
+    multer: 2.2.0
     normalize-path: ^3.0.0
     parse-entities: 4.0.1
-    picomatch: ^4.0.2
+    picomatch: ^4.0.4
     picomatch-browser: 2.2.6
     prettier: ^2.8.8
     prism-react-renderer: ^2.4.1
@@ -210,6 +260,6 @@ catalog:
     uvu: 0.5.6
     vfile-message: 3.1.4
     vite: ^6.4.0
-    vitest: ^3.2.6
+    vitest: 4.1.9
     webfontloader: 1.6.28
     zod: ^3.24.2

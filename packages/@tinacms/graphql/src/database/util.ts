@@ -115,9 +115,9 @@ export const stringifyFile = (
       const enginesWithYaml = {
         ...matterEngines,
         yaml: {
-          parse: (val) => yaml.safeLoad(val) as object,
+          parse: (val) => yaml.load(val) as object,
           stringify: (val) =>
-            yaml.safeDump(val, { lineWidth: yamlMaxLineWidth }),
+            yaml.dump(val, { lineWidth: yamlMaxLineWidth }),
         },
       };
       const ok = matter.stringify(
@@ -134,7 +134,7 @@ export const stringifyFile = (
       return JSON.stringify(strippedContent, null, 2);
     case '.yaml':
     case '.yml':
-      return yaml.safeDump(strippedContent, {
+      return yaml.dump(strippedContent, {
         lineWidth: markdownParseConfig?.yamlMaxLineWidth ?? -1,
       });
     case '.toml':
@@ -185,7 +185,7 @@ export const parseFile = <T extends object>(
         if (!content) {
           return {} as T;
         }
-        return yaml.safeLoad(content) as T;
+        return yaml.load(content) as T;
     }
   } catch (e) {
     // ensure that parser errors are always logged out

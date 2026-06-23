@@ -8,8 +8,14 @@
 // is deduped across the tree while the excluded data-layer packages
 // (@tinacms/graphql|datalayer|search) still resolve from upstream npm.
 //
-// Run after `pnpm build`. In CI, GITHUB_SERVER_URL / GITHUB_REPOSITORY are set
-// by Actions; locally they fall back to the CYBR-ai repo so URLs are still valid.
+// Run via `pnpm release:pack`, which runs `pnpm types` first so every package's dist/
+// holds the real tsc + tsc-alias declarations. A bare `pnpm build` only emits the
+// @tinacms/scripts dev-mode stubs (`export * from "../src/..."`), which dangle once packed
+// (files ships dist/ only) and break consumers with TS2305 "no exported member". This
+// script hard-fails on any such surviving stub rather than publish a broken tarball.
+//
+// In CI, GITHUB_SERVER_URL / GITHUB_REPOSITORY are set by Actions; locally they fall back
+// to the CYBR-ai repo so URLs are still valid.
 
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -38,6 +44,24 @@ const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com'
 const repository = process.env.GITHUB_REPOSITORY || 'CYBR-ai/tinacms'
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'))
+
+// A dev-mode declaration stub looks like `export * from "../src/index"` — it resolves only
+// inside the monorepo where src/ sits beside dist/. Once packed with `files: ["dist"]` the
+// target is gone and the re-export dangles. Walk dist/ and collect any .d.ts that still
+// points up into ../src so we can refuse to publish it.
+const SRC_STUB_RE = /from\s+['"]\.\.(?:\/\.\.)*\/src\//
+const findDanglingStubs = (dir) => {
+  const out = []
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name)
+    if (entry.isDirectory()) {
+      out.push(...findDanglingStubs(full))
+    } else if (entry.name.endsWith('.d.ts') && SRC_STUB_RE.test(fs.readFileSync(full, 'utf8'))) {
+      out.push(full)
+    }
+  }
+  return out
+}
 
 const rootVersion = readJson(path.join(repoRoot, 'packages/tinacms/package.json')).version
 const tag = `v${rootVersion}`
@@ -79,6 +103,22 @@ for (const dir of PUBLISHED_PACKAGE_DIRS) {
     /(^|\/)dist\//.test(pkgJson.module || '')
   if (pointsAtDist && !fs.existsSync(path.join(pkgDir, 'dist'))) {
     throw new Error(`${pkgJson.name}: dist/ missing — run "pnpm build" before packing.`)
+  }
+
+  // Refuse to ship dev-mode declaration stubs. The real declarations come from the `types`
+  // task (tsc + tsc-alias); if any survive pointing at ../src, the build order was wrong
+  // (build ran after types). See the header note.
+  const distDir = path.join(pkgDir, 'dist')
+  if (fs.existsSync(distDir)) {
+    const stubs = findDanglingStubs(distDir)
+    if (stubs.length) {
+      throw new Error(
+        `${pkgJson.name}: ${stubs.length} declaration file(s) still re-export from ../src ` +
+          `(dev-mode stubs that dangle once packed). Run "pnpm types" so tsc emits real ` +
+          `declarations before packing.\n` +
+          stubs.map((f) => `  - ${path.relative(pkgDir, f)}`).join('\n')
+      )
+    }
   }
 
   // Apache-2.0 compliance: ensure every tarball ships a LICENSE carrying the

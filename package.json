@@ -25,7 +25,7 @@
         "publish": "pnpm publish -r --no-git-checks --access public && pnpm exec changeset tag",
         "publish:beta": "pnpm publish -r --tag beta --no-git-checks --access public",
         "publish:dev": "pnpm publish -r --tag dev --no-git-checks --access public",
-        "release:pack": "node scripts/build-release.mjs",
+        "release:pack": "pnpm types && node scripts/build-release.mjs",
         "push-tags": "pnpm exec changeset tag && git pull && git push --follow-tags",
         "lint": "biome lint ./packages",
         "format": "biome format --write ./packages/"

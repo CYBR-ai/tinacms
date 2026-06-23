@@ -54,7 +54,7 @@ overrides:
     "diff@>=5.0.0 <5.2.2": "5.2.2"
     "brace-expansion@<2.0.0": "1.1.13"
     "brace-expansion@>=2.0.0 <2.0.3": "2.0.3"
-    "tmp@<0.2.6": "0.2.6"
+    "tmp@<0.2.7": "0.2.7"
 allowBuilds:
     "@biomejs/biome": true
     "@parcel/watcher": true

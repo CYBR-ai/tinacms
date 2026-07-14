@@ -36,8 +36,10 @@ overrides:
     "form-data@<3.0.0": "2.5.6"
     "form-data@>=3.0.0 <3.0.5": "3.0.5"
     "form-data@>=4.0.0 <4.0.6": "4.0.6"
-    # js-yaml 3.x is intentionally NOT forced to 4.x — gray-matter & friends rely
-    # on the v3 safeLoad API. Only the 4.x line is bumped to its patched release.
+    # js-yaml 3.x is kept on the 3.x line (gray-matter & friends rely on the v3
+    # safeLoad API) rather than forced to 4.x; each major is pinned to its patched
+    # release (3.x -> 3.15.0, 4.x -> 4.2.0).
+    "js-yaml@>=3.0.0 <3.15.0": "3.15.0"
     "js-yaml@>=4.0.0 <4.2.0": "4.2.0"
     "qs@>=6.0.0 <6.15.2": "6.15.2"
     "uuid@>=11.0.0 <11.1.1": "11.1.1"

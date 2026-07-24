@@ -1,5 +1,11 @@
 # tinacms
 
+## 3.10.0
+
+### Minor Changes
+
+- [#21](https://github.com/CYBR-ai/tinacms/pull/21) [`71428d8`](https://github.com/CYBR-ai/tinacms/commit/71428d826e8e442ea0cad58c87fc2c18a18074e6) Thanks [@ErlendS](https://github.com/ErlendS)! - Remove unused packages from the fork to shrink the dependency/vulnerability surface: drop `@tinacms/auth`, `@tinacms/vercel-previews`, and `@tinacms/webpack-helpers` (none are reachable from the `tinacms` or `@tinacms/cli` packages our apps consume), and drop the dead `next` devDependency from `tinacms`.
+
 ## 3.9.7
 
 ### Patch Changes

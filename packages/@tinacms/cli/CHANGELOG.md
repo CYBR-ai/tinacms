@@ -1,5 +1,13 @@
 # @tinacms/cli
 
+## 2.5.6
+
+### Patch Changes
+
+- Updated dependencies [[`71428d8`](https://github.com/CYBR-ai/tinacms/commit/71428d826e8e442ea0cad58c87fc2c18a18074e6)]:
+  - tinacms@3.10.0
+  - @tinacms/app@2.5.11
+
 ## 2.5.5
 
 ### Patch Changes

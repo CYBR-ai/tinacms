@@ -105,34 +105,17 @@ jobs:
               - '.github/workflows/main.yml'
 
   adapter-matrix:
-    name: Adapter Compatibility (${{ matrix.adapter }})
+    # We only exercise the memory-level adapter: this fork is consumed solely by
+    # baloo-frontend-platform's website app, which runs TinaCMS local-only (local
+    # filesystem backend, clientId: null). The sqlite-level, mongodb-level, and
+    # tina-level-client adapters cover self-hosted / TinaCloud backends we never
+    # use, so they were dropped along with the MongoDB service. Re-add them here if
+    # a consumer ever needs a self-hosted data layer.
+    name: Adapter Compatibility (memory-level)
     needs: adapter-changes
     if: needs.adapter-changes.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - adapter: memory-level
-            needs_mongo: false
-          - adapter: sqlite-level
-            needs_mongo: false
-          - adapter: mongodb-level
-            needs_mongo: true
-          - adapter: tina-level-client
-            needs_mongo: false
-
-    services:
-      mongodb:
-        image: ${{ matrix.needs_mongo && 'mongo:7' || '' }}
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongosh --quiet --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
 
     steps:
       - name: Check out code
@@ -175,14 +158,6 @@ jobs:
         run: pnpm turbo run build --filter=@tinacms/graphql
 
       - name: Run adapter test
-        if: ${{ !matrix.needs_mongo }}
         env:
-          ADAPTER: ${{ matrix.adapter }}
-        run: pnpm --filter @tinacms/cli test:adapters
-
-      - name: Run adapter test (mongo)
-        if: matrix.needs_mongo
-        env:
-          ADAPTER: ${{ matrix.adapter }}
-          MONGO_URI: mongodb://localhost:27017
+          ADAPTER: memory-level
         run: pnpm --filter @tinacms/cli test:adapters

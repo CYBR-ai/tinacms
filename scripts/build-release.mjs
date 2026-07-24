@@ -30,14 +30,11 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const PUBLISHED_PACKAGE_DIRS = [
   'packages/tinacms',
   'packages/@tinacms/app',
-  'packages/@tinacms/auth',
   'packages/@tinacms/bridge',
   'packages/@tinacms/cli',
   'packages/@tinacms/mdx',
   'packages/@tinacms/metrics',
   'packages/@tinacms/schema-tools',
-  'packages/@tinacms/vercel-previews',
-  'packages/@tinacms/webpack-helpers',
 ]
 
 const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com'
@@ -95,8 +92,8 @@ for (const dir of PUBLISHED_PACKAGE_DIRS) {
   const pkgJson = readJson(path.join(pkgDir, 'package.json'))
 
   // Most packages emit to dist/ and must be built first. A few legitimately don't
-  // (e.g. @tinacms/app ships src and is bundled by the CLI; @tinacms/webpack-helpers
-  // ships a root index.js), so only require dist when the manifest points there.
+  // (e.g. @tinacms/app ships src and is bundled by the CLI), so only require dist
+  // when the manifest points there.
   const pointsAtDist =
     (pkgJson.files || []).some((f) => f === 'dist' || f.startsWith('dist/')) ||
     /(^|\/)dist\//.test(pkgJson.main || '') ||

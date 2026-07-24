@@ -24,9 +24,8 @@ nothing once the tag for the current version already exists.
 
 ### Published packages
 
-`tinacms`, `@tinacms/app`, `@tinacms/auth`, `@tinacms/bridge`, `@tinacms/cli`,
-`@tinacms/mdx`, `@tinacms/metrics`, `@tinacms/schema-tools`, `@tinacms/vercel-previews`,
-`@tinacms/webpack-helpers`.
+`tinacms`, `@tinacms/app`, `@tinacms/bridge`, `@tinacms/cli`, `@tinacms/mdx`,
+`@tinacms/metrics`, `@tinacms/schema-tools`.
 
 **Not published** (resolved from upstream npm): `@tinacms/graphql`, `@tinacms/datalayer`,
 `@tinacms/search` (ambiguous "Tina Data Layer" license — confirm before publishing these),

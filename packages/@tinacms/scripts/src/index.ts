@@ -112,11 +112,7 @@ export class BuildTina {
       process.exit(1);
     }
 
-    if (
-      ['@tinacms/scripts', '@tinacms/webpack-helpers'].includes(
-        packageJson.name
-      )
-    ) {
+    if (packageJson.name === '@tinacms/scripts') {
       console.info(`Skipping ${packageJson.name}`);
       return;
     }

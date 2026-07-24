@@ -7,20 +7,20 @@ overrides:
     vite: "catalog:"
     # --- Dependabot remediation: pin (incl. transitive) deps to patched versions. ---
     # Exact pins are used deliberately so an open ">=" can't pull an unrelated
-    # higher major (e.g. protobufjs 8.x-alpha, react-router 7).
+    # higher major (e.g. protobufjs 8.x-alpha).
     #
     # jsdom is only an (unused) optional peer of vitest — tests run on happy-dom —
     # so modernising it removes the legacy request/uuid@3/tough-cookie@2/form-data@2
     # subtree entirely (incl. the no-upstream-fix request advisory).
     jsdom: "^29.1.1"
-    dompurify: "3.4.11"
+    dompurify: "3.4.12"
     markdown-it: "14.2.0"
-    protobufjs: "7.6.3"
+    protobufjs: "7.6.5"
     "@protobufjs/utf8": "1.1.1"
     "@opentelemetry/core": "2.8.0"
     "@babel/core": "7.29.7"
-    react-router: "6.30.4"
-    react-router-dom: "6.30.4"
+    react-router: "7.18.0"
+    react-router-dom: "7.18.0"
     js-cookie: "3.0.7"
     mermaid: "11.15.0"
     ip-address: "10.1.1"
@@ -31,16 +31,16 @@ overrides:
     lodash: "4.18.0"
     lodash-es: "4.18.0"
     # range-targeted: bump each affected major to its patched release only
-    "postcss@8": "8.5.10"
+    "postcss@8": "8.5.12"
     "path-to-regexp@<0.2.0": "0.1.13"
     "form-data@<3.0.0": "2.5.6"
     "form-data@>=3.0.0 <3.0.5": "3.0.5"
     "form-data@>=4.0.0 <4.0.6": "4.0.6"
     # js-yaml 3.x is kept on the 3.x line (gray-matter & friends rely on the v3
     # safeLoad API) rather than forced to 4.x; each major is pinned to its patched
-    # release (3.x -> 3.15.0, 4.x -> 4.2.0).
+    # release (3.x -> 3.15.0, 4.x -> 4.3.0).
     "js-yaml@>=3.0.0 <3.15.0": "3.15.0"
-    "js-yaml@>=4.0.0 <4.2.0": "4.2.0"
+    "js-yaml@>=4.0.0 <4.3.0": "4.3.0"
     "qs@>=6.0.0 <6.15.2": "6.15.2"
     "uuid@>=11.0.0 <11.1.1": "11.1.1"
     "picomatch@<3.0.0": "2.3.2"
@@ -50,12 +50,14 @@ overrides:
     "minimatch@<4.0.0": "3.1.4"
     "minimatch@>=5.0.0 <5.1.8": "5.1.8"
     "minimatch@>=9.0.0 <9.0.7": "9.0.7"
-    "immutable@<4.0.0": "3.8.3"
+    "@ardatan/relay-compiler>immutable": "4.3.9"
     "immutable@>=5.0.0 <5.1.8": "5.1.9"
     "diff@<5.0.0": "4.0.4"
     "diff@>=5.0.0 <5.2.2": "5.2.2"
-    "brace-expansion@<2.0.0": "1.1.13"
-    "brace-expansion@>=2.0.0 <2.0.3": "2.0.3"
+    "brace-expansion@<2.0.0": "1.1.16"
+    "brace-expansion@>=2.0.0 <2.1.2": "2.1.2"
+    "brace-expansion@>=3.0.0 <5.0.7": "5.0.7"
+    "linkify-it@<5.0.2": "5.0.2"
     "tmp@<0.2.7": "0.2.7"
 allowBuilds:
     "@biomejs/biome": true
@@ -162,7 +164,7 @@ catalog:
     altair-express-middleware: ^7.3.6
     async-lock: ^1.4.1
     auto-bind: ^4.0.0
-    body-parser: ^1.20.3
+    body-parser: ^1.20.6
     busboy: ^1.6.0
     c8: ^7.14.0
     ccount: 2.0.1
@@ -236,7 +238,7 @@ catalog:
     react-dnd-html5-backend: ^16.0.1
     react-dropzone: 14.2.3
     react-final-form: ^6.5.9
-    react-router-dom: ^6.30.3
+    react-router-dom: ^7.18.0
     react-use: ^17.6.0
     readable-stream: ^4.7.0
     remark: 14.0.2

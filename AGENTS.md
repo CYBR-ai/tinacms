@@ -41,6 +41,26 @@ tests/                 # Build verification tests
 - Example apps use `workspace:*` to reference local TinaCMS packages
 - `turbo.json` defines build/test/types task dependencies
 
+## Releases
+
+This is a **fork**, so we don't publish to the public `@tinacms` npm scope. A release packs each package into a tarball attached to a **GitHub Release**. Releases are driven by [Changesets](https://github.com/changesets/changesets) via `.github/workflows/release.yml`, and the tag is derived from the `packages/tinacms` version (`v$VERSION`).
+
+To cut a version release:
+
+1. **Add a changeset in your PR** — `pnpm changeset` (interactive) or hand-write `.changeset/<slug>.md`. Bump `tinacms` (this sets the release version):
+
+   ```md
+   ---
+   "tinacms": patch
+   ---
+
+   One-line, user-facing summary of the change.
+   ```
+
+2. **Merge the PR to `main`.** `release.yml` picks up the pending changeset(s) and opens/updates a **"Version Packages"** PR that bumps versions and updates changelogs.
+
+3. **Merge the "Version Packages" PR.** With no changesets left, `release.yml` packs the tarballs, tags `v$VERSION`, and publishes the GitHub Release. (Also triggerable via **workflow_dispatch**.)
+
 ## Coding Standards
 
 - **Linting/Formatting:** Biome (`biome.json` at root). Example apps extend with `"extends": ["../../../biome.json"]`

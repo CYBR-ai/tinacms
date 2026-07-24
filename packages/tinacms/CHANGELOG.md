@@ -1,5 +1,11 @@
 # tinacms
 
+## 3.10.1
+
+### Patch Changes
+
+- [#23](https://github.com/CYBR-ai/tinacms/pull/23) [`d1ce357`](https://github.com/CYBR-ai/tinacms/commit/d1ce357be53393b0becadd78ad73cdd32a815a28) Thanks [@ErlendS](https://github.com/ErlendS)! - Remediate remaining Dependabot alerts. Bumped react-router/react-router-dom to 7.18.0; refreshed body-parser to 1.20.6; pinned postcss 8.5.12, dompurify 3.4.12, protobufjs 7.6.5, js-yaml 4.3.0, immutable 4.3.9, linkify-it 5.0.2, brace-expansion 1.1.16/2.1.2/5.0.7.
+
 ## 3.10.0
 
 ### Minor Changes

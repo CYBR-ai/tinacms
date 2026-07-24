@@ -1,5 +1,11 @@
 # tinacms
 
+## 3.9.7
+
+### Patch Changes
+
+- [#18](https://github.com/CYBR-ai/tinacms/pull/18) [`62b8c98`](https://github.com/CYBR-ai/tinacms/commit/62b8c98cdc2624fb1401bc52a08ba2451d957540) Thanks [@ErlendS](https://github.com/ErlendS)! - Pin the transitive immutable 5.x copy to its patched release 5.1.9 (remediates GHSA-xvcm-6775-5m9r / CVE-2026-59880, a hash-collision algorithmic-complexity DoS in Immutable.Map/Set). It is pulled in via @graphql-codegen -> @ardatan/relay-compiler (immutable ^5.1.5); the range-targeted override (>=5.0.0 <5.1.8 -> 5.1.9) was widened from the prior 5.1.5 pin to cover the full vulnerable range. The immutable 3.x copy (pinned to 3.8.3) is unaffected by this advisory and left in place.
+
 ## 3.9.6
 
 ### Patch Changes

@@ -48,7 +48,6 @@ const fuzzyResults = await client.query("TinCMS tutrial", {
 - `client.put(documents)` - Index documents
 - `client.query(query, options)` - Search the index
 - `client.del(ids)` - Delete documents
-- `client.export(filename)` - Export index to SQLite
 
 ## License
 

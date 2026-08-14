@@ -5,40 +5,29 @@ const baseOpts = {
   entryPoint: '/project/tina/database.ts',
   outfile:
     '/project/tina/__generated__/.cache/12345/database/database.build.mjs',
-  external: ['better-sqlite3'],
+  external: ['my-custom-native-adapter'],
   loader: { '.ts': 'ts' as Loader },
 };
 
 describe('buildDatabaseEsbuildConfig — externalize contract', () => {
-  // The asserts in this describe block lock down regressions called out in
-  // #6785: removing the better-sqlite3 external (re-introducing the
-  // __filename crash) or replacing it with `packages: 'external'` (which
-  // breaks named imports of CJS UMD packages like sqlite-level v1).
-
-  it('externalizes better-sqlite3 by passing it through to esbuild', () => {
+  it('externalizes packages passed by the caller', () => {
     const config = buildDatabaseEsbuildConfig(baseOpts);
-    expect(config.external).toContain('better-sqlite3');
+    expect(config.external).toContain('my-custom-native-adapter');
   });
 
   it('passes the caller-provided external list through unchanged', () => {
     const config = buildDatabaseEsbuildConfig({
       ...baseOpts,
-      external: ['better-sqlite3', 'my-custom-native-adapter', 'another-pkg'],
+      external: ['my-custom-native-adapter', 'another-pkg'],
     });
     expect(config.external).toEqual([
-      'better-sqlite3',
       'my-custom-native-adapter',
       'another-pkg',
     ]);
   });
 
   it('does NOT use `packages: "external"` (broad-externalize regression guard)', () => {
-    // This is the critical assertion from #6785. Setting `packages: 'external'`
-    // would also externalize CJS UMD packages like sqlite-level v1 and
-    // mongodb-level, breaking user-side `import { SqliteLevel } from
-    // 'sqlite-level'` because Node's cjs-module-lexer can't reliably detect
-    // their named exports. We must externalize a curated baseline, not
-    // everything in node_modules.
+    // Broad externalization can break named imports from CJS dependencies.
     const config = buildDatabaseEsbuildConfig(baseOpts);
     expect(config.packages).toBeUndefined();
   });

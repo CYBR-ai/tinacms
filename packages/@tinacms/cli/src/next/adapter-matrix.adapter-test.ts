@@ -34,7 +34,6 @@ type Adapter = {
 
 const adapters: Adapter[] = [
   { name: 'memory-level', kind: 'level' },
-  { name: 'sqlite-level', kind: 'level' },
   { name: 'mongodb-level', kind: 'level' },
   { name: 'tina-level-client', kind: 'tina-client' },
 ];

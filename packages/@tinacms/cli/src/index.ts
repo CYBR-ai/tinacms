@@ -6,7 +6,6 @@ import { BuildCommand } from './next/commands/build-command';
 import { AuditCommand } from './next/commands/audit-command';
 import { InitCommand } from './next/commands/init-command';
 import { CodemodCommand } from './next/commands/codemod-command';
-import { SearchIndexCommand } from './next/commands/searchindex-command';
 import { DoctorCommand } from './next/commands/doctor-command';
 
 export type {
@@ -27,7 +26,6 @@ cli.register(BuildCommand);
 cli.register(AuditCommand);
 cli.register(InitCommand);
 cli.register(CodemodCommand);
-cli.register(SearchIndexCommand);
 cli.register(DoctorCommand);
 cli.register(Builtins.DefinitionsCommand);
 cli.register(Builtins.HelpCommand);

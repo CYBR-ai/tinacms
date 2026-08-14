@@ -40,7 +40,6 @@
         "@tinacms/schema-tools": "workspace:*",
         "memory-level": "catalog:",
         "search-index": "catalog:",
-        "sqlite-level": "catalog:",
         "stopword": "catalog:"
     },
     "publishConfig": {

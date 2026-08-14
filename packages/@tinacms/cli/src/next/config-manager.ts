@@ -385,10 +385,7 @@ export class ConfigManager {
     // https://github.com/nodejs/modules/issues/307
     const buildDir = path.join(this.generatedCachePath, 'database');
     const outfile = path.join(buildDir, 'database.build.mjs'); // .mjs tells Node.js this is ESM
-    // Compose the externalize list — baseline (currently better-sqlite3, the
-    // canonical native CJS case) plus any user-provided extensions from
-    // `build.externalDependencies` in tina/config.ts. See external-resolver.ts
-    // for the merge rules and rationale.
+    // Externalize packages explicitly listed in tina/config.ts.
     const external = resolveDatabaseExternals(this.config);
     // Construct the esbuild options via a pure helper so the externalize /
     // output-path contract is locked down by unit tests in

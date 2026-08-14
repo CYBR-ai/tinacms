@@ -1,14 +1,12 @@
 import path from 'path';
-import { Database, FilesystemBridge, buildSchema } from '@tinacms/graphql';
+import { Database, buildSchema } from '@tinacms/graphql';
 import { Telemetry } from '@tinacms/metrics';
-import { LocalSearchIndexClient, SearchIndexer } from '@tinacms/search';
 import AsyncLock from 'async-lock';
 import chokidar from 'chokidar';
 import { Command, Option } from 'clipanion';
 import fs from 'fs-extra';
 import { logger, summary } from '../../../logger';
 import { isHostExposed } from '../../../utils/host';
-import { spin } from '../../../utils/spinner';
 import { dangerText, warnText } from '../../../utils/theme';
 import { Codegen } from '../../codegen';
 import { ConfigManager } from '../../config-manager';
@@ -27,9 +25,6 @@ export class DevCommand extends BaseCommand {
   });
   noWatch = Option.Boolean('--noWatch', false, {
     description: "Don't regenerate config on file changes",
-  });
-  outputSearchIndexPath = Option.String('--outputSearchIndexPath', {
-    description: 'Path to write the search index to',
   });
   noServer = Option.Boolean('--no-server', false, {
     description: 'Do not start the dev server',
@@ -189,65 +184,17 @@ export class DevCommand extends BaseCommand {
       configManager.outputGitignorePath,
       'index.html\nassets/'
     );
-    const searchIndexClient = new LocalSearchIndexClient({
-      stopwordLanguages: configManager.config.search?.tina?.stopwordLanguages,
-      tokenSplitRegex: configManager.config.search?.tina?.tokenSplitRegex,
-    });
-    await searchIndexClient.onStartIndexing();
-
-    const searchIndexer = new SearchIndexer({
-      batchSize: configManager.config.search?.indexBatchSize || 100,
-      bridge: new FilesystemBridge(
-        configManager.rootPath,
-        configManager.contentRootPath
-      ),
-      schema: tinaSchema,
-      client: searchIndexClient,
-      textIndexLength:
-        configManager.config.search?.maxSearchIndexFieldLength || 100,
-    });
-
-    if (configManager.config.search) {
-      await spin({
-        waitFor: async () => {
-          await searchIndexer.indexAllContent();
-        },
-        text: 'Building search index',
-      });
-
-      if (this.outputSearchIndexPath) {
-        await searchIndexClient.export(this.outputSearchIndexPath);
-      }
-    }
-
     if (this.noServer) {
       logger.info('--no-server option specified - Dev server not started');
       process.exit(0);
     }
     if (!this.noWatch) {
-      this.watchContentFiles(
-        configManager,
-        database,
-        dbLock,
-        configManager.config.search && searchIndexer
-      );
-    }
-
-    // Pass both searchIndex and fuzzySearchWrapper
-    const searchIndexWithFuzzy = searchIndexClient.searchIndex as
-      | (typeof searchIndexClient.searchIndex & {
-          fuzzySearchWrapper?: typeof searchIndexClient.fuzzySearchWrapper;
-        })
-      | undefined;
-    if (searchIndexWithFuzzy && searchIndexClient.fuzzySearchWrapper) {
-      searchIndexWithFuzzy.fuzzySearchWrapper =
-        searchIndexClient.fuzzySearchWrapper;
+      this.watchContentFiles(configManager, database, dbLock);
     }
 
     const server = await createDevServer(
       configManager,
       database,
-      searchIndexWithFuzzy,
       apiURL,
       this.noWatch,
       dbLock
@@ -353,8 +300,7 @@ export class DevCommand extends BaseCommand {
   watchContentFiles(
     configManager: ConfigManager,
     database: Database,
-    databaseLock: (fn: () => Promise<void>) => Promise<void>,
-    searchIndexer?: SearchIndexer
+    databaseLock: (fn: () => Promise<void>) => Promise<void>
   ) {
     const collectionContentFiles = [];
     configManager.config.schema.collections.forEach((collection) => {
@@ -387,11 +333,6 @@ export class DevCommand extends BaseCommand {
           await database
             .indexContentByPaths([pathFromRoot])
             .catch(console.error);
-          if (searchIndexer) {
-            await searchIndexer
-              .indexContentByPaths([pathFromRoot])
-              .catch(console.error);
-          }
         });
       })
       .on('change', async (changedFile) => {
@@ -403,11 +344,6 @@ export class DevCommand extends BaseCommand {
           await database
             .indexContentByPaths([pathFromRoot])
             .catch(console.error);
-          if (searchIndexer) {
-            await searchIndexer
-              .indexContentByPaths([pathFromRoot])
-              .catch(console.error);
-          }
         });
       })
       .on('unlink', async (removedFile) => {
@@ -417,11 +353,6 @@ export class DevCommand extends BaseCommand {
           await database
             .deleteContentByPaths([pathFromRoot])
             .catch(console.error);
-          if (searchIndexer) {
-            await searchIndexer
-              .deleteIndexContent([pathFromRoot])
-              .catch(console.error);
-          }
         });
       });
   }

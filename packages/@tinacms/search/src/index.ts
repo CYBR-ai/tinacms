@@ -1,6 +1,6 @@
 import createSearchIndex from 'search-index';
 export { SearchIndexer } from './indexer';
-export { LocalSearchIndexClient, TinaCMSSearchIndexClient } from './client';
+export { LocalSearchIndexClient } from './client';
 export type {
   SearchClient,
   SearchOptions,

@@ -1,5 +1,11 @@
 # tinacms
 
+## 3.11.0
+
+### Minor Changes
+
+- [#25](https://github.com/CYBR-ai/tinacms/pull/25) [`d4b1939`](https://github.com/CYBR-ai/tinacms/commit/d4b1939018cd0d68a2e3c4646fdc67969a31ce02) Thanks [@ErlendS](https://github.com/ErlendS)! - Remove the unused SQLite search-index export and TinaCloud search uploader from the fork. Local search remains memory-backed, and self-hosted projects can still provide custom database and search clients explicitly.
+
 ## 3.10.1
 
 ### Patch Changes

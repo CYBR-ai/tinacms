@@ -43,7 +43,6 @@
         "@types/prompts": "catalog:",
         "jest": "catalog:",
         "mongodb-level": "catalog:",
-        "sqlite-level": "catalog:",
         "ts-jest": "catalog:"
     },
     "scripts": {
@@ -73,7 +72,6 @@
         "@tinacms/graphql": "workspace:*",
         "@tinacms/metrics": "workspace:*",
         "@tinacms/schema-tools": "workspace:*",
-        "@tinacms/search": "workspace:*",
         "@vitejs/plugin-react": "catalog:",
         "altair-express-middleware": "catalog:",
         "async-lock": "catalog:",

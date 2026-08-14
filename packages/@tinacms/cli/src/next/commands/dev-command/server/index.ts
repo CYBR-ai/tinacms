@@ -13,7 +13,6 @@ import {
 export const createDevServer = async (
   configManager: ConfigManager,
   database: Database,
-  searchIndex: any,
   apiURL: string,
   noWatch: boolean,
   databaseLock: (fn: () => Promise<void>) => Promise<void>
@@ -24,7 +23,6 @@ export const createDevServer = async (
       apiURL,
       configManager,
       database,
-      searchIndex,
       databaseLock,
     }),
     viteTransformExtension(),

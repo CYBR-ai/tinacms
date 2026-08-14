@@ -796,9 +796,8 @@ export interface Config<
     /**
      * Additional npm packages to externalize when bundling `tina/database.ts`.
      *
-     * Tina automatically externalizes a known-good baseline (currently `better-sqlite3`).
-     * Use this list for native modules or packages outside that baseline that cannot be
-     * bundled by esbuild — for example, custom database adapters that ship native bindings.
+     * Use this list for packages that cannot be bundled by esbuild, such as
+     * custom database adapters that ship native bindings.
      *
      * Externalized packages must be installed in your project's `node_modules` so Node can
      * resolve them at runtime.

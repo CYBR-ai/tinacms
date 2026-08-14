@@ -12,10 +12,10 @@ import type { BuildOptions, Loader } from 'esbuild';
  *
  * The contract enforced here is intentionally strict:
  *
- * - `external` is set to the caller-provided list (typically the curated
- *   baseline + `build.externalDependencies`). NEVER set `packages: 'external'`
+ * - `external` is set to the caller-provided `build.externalDependencies`
+ *   list. NEVER set `packages: 'external'`
  *   — broad-externalize would also externalize CJS UMD packages like
- *   `sqlite-level` (v1) and `mongodb-level`, breaking user-side named imports
+ *   CJS packages such as `mongodb-level`, breaking user-side named imports
  *   because Node's `cjs-module-lexer` can't reliably detect their exports.
  *   See #6785 for the regression test that locks this down.
  *
@@ -30,7 +30,7 @@ export const buildDatabaseEsbuildConfig = (opts: {
   entryPoint: string;
   /** Where esbuild writes the bundled `.mjs`. Must be inside the project tree. */
   outfile: string;
-  /** Externalized package names (must include `better-sqlite3` baseline). */
+  /** Externalized package names supplied by the user. */
   external: string[];
   /** Loader map shared with the rest of the CLI (asset extensions, .ts/.tsx, etc.). */
   loader: { [ext: string]: Loader };

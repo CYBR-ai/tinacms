@@ -65,7 +65,6 @@
     "@tinacms/bridge": "workspace:*",
     "@tinacms/mdx": "workspace:*",
     "@tinacms/schema-tools": "workspace:*",
-    "@tinacms/search": "workspace:*",
     "@udecode/cmdk": "catalog:",
     "@udecode/cn": "catalog:",
     "@udecode/plate": "catalog:",

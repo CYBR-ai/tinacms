@@ -15,7 +15,6 @@ export type BuildInvokeEventPayload = {
   hasPreviewName: boolean;
   specifiesTinaGraphQLVersions?: boolean;
   skipCloudChecks: boolean;
-  skipSearchIndex: boolean;
 };
 
 export const BuildFinishedEvent = 'tinacms-cli-build-finished';

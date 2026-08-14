@@ -18,12 +18,7 @@ import { AuthenticationCancelledError } from './authenticate';
 import loginLlama from './tina-login.png';
 
 import { TinaAdminApi } from '../admin/api';
-import {
-  Client,
-  LocalSearchClient,
-  TinaCMSSearchClient,
-  TinaIOConfig,
-} from '../internalClient';
+import { Client, TinaIOConfig } from '../internalClient';
 import { CreateClientProps, createClient } from '../utils';
 import { useTinaAuthRedirect } from './useTinaAuthRedirect';
 import { captureEvent } from '../lib/posthog/posthogProvider';
@@ -373,32 +368,6 @@ export const TinaCloudProvider = (
       previousBranchRef.current = currentBranch;
     }
   }, [currentBranch]);
-
-  useEffect(() => {
-    let searchClient;
-    // if local and search is configured then we always use the local client
-    // if not local, then determine if search is enabled and use the client from the config
-    if (props.isLocalClient) {
-      searchClient = new LocalSearchClient(
-        cms.api.tina,
-        props.schema.config?.search?.tina
-      );
-    } else {
-      const hasTinaSearch = Boolean(props.schema.config?.search?.tina);
-      if (hasTinaSearch) {
-        searchClient = new TinaCMSSearchClient(
-          cms.api.tina,
-          props.schema.config?.search?.tina
-        );
-      } else {
-        searchClient = props.schema.config?.search?.searchClient;
-      }
-    }
-
-    if (searchClient) {
-      cms.registerApi('search', searchClient);
-    }
-  }, [props]);
 
   if (!cms.api.admin) {
     cms.registerApi('admin', new TinaAdminApi(cms));

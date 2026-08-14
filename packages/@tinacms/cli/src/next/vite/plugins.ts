@@ -14,7 +14,6 @@ import {
   createMediaRouter,
   parseMediaFolder,
 } from '../commands/dev-command/server/media';
-import { createSearchIndexRouter } from '../commands/dev-command/server/searchIndex';
 import type { ConfigManager } from '../config-manager';
 import { buildCorsOriginCheck } from './cors';
 
@@ -51,13 +50,11 @@ export const devServerEndPointsPlugin = ({
   configManager,
   apiURL,
   database,
-  searchIndex,
   databaseLock,
 }: {
   apiURL: string;
   database: Database;
   configManager: ConfigManager;
-  searchIndex: any;
   databaseLock: (fn: () => Promise<void>) => Promise<void>;
 }) => {
   const corsOriginCheck = buildCorsOriginCheck(
@@ -82,11 +79,6 @@ export const devServerEndPointsPlugin = ({
           publicFolder: parseMediaFolder(mediaPaths?.publicFolder || ''),
           mediaRoot: parseMediaFolder(mediaPaths?.mediaRoot || ''),
         });
-        const searchIndexRouter = createSearchIndexRouter({
-          config: { apiURL, searchPath: 'searchIndex' },
-          searchIndex,
-        });
-
         if (req.url.startsWith('/media/upload')) {
           await mediaRouter.handlePost(req, res);
           return;
@@ -126,20 +118,6 @@ export const devServerEndPointsPlugin = ({
             });
           });
           res.end(JSON.stringify(result));
-          return;
-        }
-
-        if (
-          req.url.startsWith('/searchIndex') ||
-          req.url.startsWith('/v2/searchIndex')
-        ) {
-          if (req.method === 'POST') {
-            await searchIndexRouter.put(req, res);
-          } else if (req.method === 'GET') {
-            await searchIndexRouter.get(req, res);
-          } else if (req.method === 'DELETE') {
-            await searchIndexRouter.del(req, res);
-          }
           return;
         }
 

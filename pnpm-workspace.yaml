@@ -62,7 +62,6 @@ overrides:
 allowBuilds:
     "@biomejs/biome": true
     "@parcel/watcher": true
-    better-sqlite3: true
     browser-tabs-lock: true
     bufferutil: true
     core-js: true
@@ -245,7 +244,6 @@ catalog:
     remark-gfm: ^2.0.0
     remark-mdx: 2.3.0
     search-index: 4.0.0
-    sqlite-level: ^2.1.0
     stopword: ^3.1.4
     stringify-entities: 4.0.3
     ts-jest: ^29.2.5

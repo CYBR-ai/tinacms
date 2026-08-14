@@ -7,11 +7,6 @@ import type { Collection, TinaSchema } from '@tinacms/schema-tools';
 import type { Client } from '../internalClient';
 import type { CollectionResponse, DocumentForm } from './types';
 
-import {
-  SearchClient,
-  processDocumentForIndexing,
-} from '@tinacms/search/index-client';
-
 export const CREATE_DOCUMENT_GQL = `#graphql
 mutation($collection: String!, $relativePath: String!, $params: DocumentMutation!) {
   createDocument(
@@ -54,16 +49,9 @@ export class TinaAdminApi {
   api: Client;
   useDataLayer: boolean;
   schema: TinaSchema;
-  searchClient?: SearchClient;
-  maxSearchIndexFieldLength: number = 100;
   constructor(cms: TinaCMS) {
     this.api = cms.api.tina;
     this.schema = cms.api.tina.schema;
-    if (cms.api.search && cms.api.search?.supportsClientSideIndexing()) {
-      this.searchClient = cms.api.searchClient;
-      this.maxSearchIndexFieldLength =
-        this.schema.config?.config?.search?.maxSearchIndexFieldLength || 100;
-    }
   }
 
   async isAuthenticated() {
@@ -96,21 +84,6 @@ export class TinaAdminApi {
             `,
       { variables: { collection, relativePath, newRelativePath } }
     );
-
-    if (this.searchClient) {
-      const { document: doc } = await this.fetchDocument(
-        collection.name,
-        newRelativePath
-      );
-      const processed = processDocumentForIndexing(
-        doc['_values'] as Record<string, unknown>,
-        `${collection.path}/${newRelativePath}`,
-        collection,
-        this.maxSearchIndexFieldLength
-      );
-      await this.searchClient.put([processed]);
-      await this.searchClient.del([`${collection.name}:${relativePath}`]);
-    }
   }
 
   async deleteDocument({
@@ -123,7 +96,6 @@ export class TinaAdminApi {
     await this.api.request(DELETE_DOCUMENT_GQL, {
       variables: { collection, relativePath },
     });
-    await this.searchClient?.del([`${collection}:${relativePath}`]);
   }
   async fetchCollection(
     collectionName: string,
@@ -359,20 +331,6 @@ export class TinaAdminApi {
       },
     });
 
-    if (this.searchClient) {
-      const { document: doc } = await this.fetchDocument(
-        collection.name,
-        relativePath
-      );
-      const processed = processDocumentForIndexing(
-        doc['_values'] as Record<string, unknown>,
-        `${collection.path}/${relativePath}`,
-        collection,
-        this.maxSearchIndexFieldLength
-      );
-      await this.searchClient.put([processed]);
-    }
-
     return response;
   }
 
@@ -388,20 +346,6 @@ export class TinaAdminApi {
         params,
       },
     });
-
-    if (this.searchClient) {
-      const { document: doc } = await this.fetchDocument(
-        collection.name,
-        relativePath
-      );
-      const processed = processDocumentForIndexing(
-        doc['_values'] as Record<string, unknown>,
-        `${collection.path}/${relativePath}`,
-        collection,
-        this.maxSearchIndexFieldLength
-      );
-      await this.searchClient.put([processed]);
-    }
 
     return response;
   }

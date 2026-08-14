@@ -1,5 +1,12 @@
 # @tinacms/app
 
+## 2.5.13
+
+### Patch Changes
+
+- Updated dependencies [[`d4b1939`](https://github.com/CYBR-ai/tinacms/commit/d4b1939018cd0d68a2e3c4646fdc67969a31ce02)]:
+  - tinacms@3.11.0
+
 ## 2.5.12
 
 ### Patch Changes

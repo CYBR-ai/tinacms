@@ -19,11 +19,11 @@ overrides:
     "@protobufjs/utf8": "1.1.1"
     "@opentelemetry/core": "2.8.0"
     "@babel/core": "7.29.7"
-    react-router: "7.18.0"
-    react-router-dom: "7.18.0"
+    react-router: "7.18.2"
+    react-router-dom: "7.18.2"
     js-cookie: "3.0.7"
-    mermaid: "11.15.0"
-    ip-address: "10.1.1"
+    mermaid: "11.16.1"
+    ip-address: "10.3.1"
     fast-xml-parser: "5.7.0"
     handlebars: "4.7.9"
     underscore: "1.13.8"
@@ -31,17 +31,17 @@ overrides:
     lodash: "4.18.0"
     lodash-es: "4.18.0"
     # range-targeted: bump each affected major to its patched release only
-    "postcss@8": "8.5.12"
+    "postcss@8": "8.5.23"
     "path-to-regexp@<0.2.0": "0.1.13"
     "form-data@<3.0.0": "2.5.6"
     "form-data@>=3.0.0 <3.0.5": "3.0.5"
     "form-data@>=4.0.0 <4.0.6": "4.0.6"
     # js-yaml 3.x is kept on the 3.x line (gray-matter & friends rely on the v3
     # safeLoad API) rather than forced to 4.x; each major is pinned to its patched
-    # release (3.x -> 3.15.0, 4.x -> 4.3.0).
-    "js-yaml@>=3.0.0 <3.15.0": "3.15.0"
-    "js-yaml@>=4.0.0 <4.3.0": "4.3.0"
-    "qs@>=6.0.0 <6.15.2": "6.15.2"
+    # release (3.x -> 3.15.1, 4.x -> 4.3.1).
+    "js-yaml@>=3.0.0 <3.15.1": "3.15.1"
+    "js-yaml@>=4.0.0 <4.3.1": "4.3.1"
+    "qs@>=2.2.5 <6.16.0": "6.16.0"
     "uuid@>=11.0.0 <11.1.1": "11.1.1"
     "picomatch@<3.0.0": "2.3.2"
     "picomatch@>=4.0.0 <4.0.4": "4.0.4"
@@ -54,11 +54,20 @@ overrides:
     "immutable@>=5.0.0 <5.1.8": "5.1.9"
     "diff@<5.0.0": "4.0.4"
     "diff@>=5.0.0 <5.2.2": "5.2.2"
-    "brace-expansion@<2.0.0": "1.1.16"
-    "brace-expansion@>=2.0.0 <2.1.2": "2.1.2"
-    "brace-expansion@>=3.0.0 <5.0.7": "5.0.7"
+    # brace-expansion 1.x/2.x/4.x-5.x each pinned to their patched release;
+    # GHSA-rgw5-rvv9-x895 bypassed the earlier GHSA-mh99-v99m-4gvg mitigation,
+    # so these are one release newer than the original remediation.
+    "brace-expansion@<2.0.0": "1.1.18"
+    "brace-expansion@>=2.0.0 <2.1.4": "2.1.4"
+    "brace-expansion@>=3.0.0 <5.0.9": "5.0.9"
     "linkify-it@<5.0.2": "5.0.2"
     "tmp@<0.2.7": "0.2.7"
+    "cross-spawn@<6.0.6": "6.0.6"
+    "nanoid@<3.3.18": "3.3.18"
+    "nanoid@>=4.0.0 <5.1.16": "5.1.16"
+    "dompurify@<3.4.13": "3.4.13"
+    "fflate@>=0.4.5 <0.4.9": "0.4.9"
+    "postcss-selector-parser@>=6.1.0 <6.1.3": "6.1.3"
 allowBuilds:
     "@biomejs/biome": true
     "@parcel/watcher": true
@@ -237,7 +246,7 @@ catalog:
     react-dnd-html5-backend: ^16.0.1
     react-dropzone: 14.2.3
     react-final-form: ^6.5.9
-    react-router-dom: ^7.18.0
+    react-router-dom: ^7.18.2
     react-use: ^17.6.0
     readable-stream: ^4.7.0
     remark: 14.0.2

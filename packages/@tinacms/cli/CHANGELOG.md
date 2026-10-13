@@ -1,5 +1,15 @@
 # @tinacms/cli
 
+## 3.0.1
+
+### Patch Changes
+
+- [#28](https://github.com/CYBR-ai/tinacms/pull/28) [`ebd2265`](https://github.com/CYBR-ai/tinacms/commit/ebd2265409e86f0bf90167cddc79fab078cfb3bd) Thanks [@ErlendS](https://github.com/ErlendS)! - Values written into the generated client are now emitted as JS literals rather than being interpolated between quotes. A branch name that contains a quote, a backslash or a newline is kept as part of the URL string instead of changing the surrounding code. The same applies to the token, the cache directory and the error policy.
+
+- Updated dependencies [[`4d7cb2b`](https://github.com/CYBR-ai/tinacms/commit/4d7cb2b4c890b57dcaf684bbb5bc53d7230b993c)]:
+  - tinacms@3.14.1
+  - @tinacms/app@2.5.14
+
 ## 2.6.0
 
 ### Minor Changes
